@@ -12,9 +12,16 @@ export EXTRACT=url
 # Download a single file from the URL provided
 curl_one() {
   # Extract base filename from the URL
-  fname=${1##*/}
+  if [[ $1 == *"authenticated"* ]]; then
+      fname=$(echo "$1"  | cut -d"/" -f 8-)
+  else
+      fname=$(echo "$1"  | cut -d"/" -f 7-)
+  fi
+  dirname=$(dirname ${fname})
   # Extra parameters for composing th curl command
   param=''
+
+  mkdir -p ${dirname} || true
 
   # Add time-cond to download the already exist file
   # only if the file was modified
